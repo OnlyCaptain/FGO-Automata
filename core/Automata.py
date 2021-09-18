@@ -1,3 +1,4 @@
+from os import close
 import time
 import random
 from core import util, crds
@@ -72,7 +73,7 @@ class Automata():
 
     # new: self, skill, tar
     # combine select servant
-    def select_servant_skill(self, skill: int, tar: int = 0, extend=False):
+    def select_servant_skill(self, skill: int, tar: int = 0, color: int = 0, extend=False):
         """ Select Servant Skill
 
         Parameters
@@ -83,6 +84,10 @@ class Automata():
             tar: int, optional
         The id of target servant. 1~3 counted from left.
         (If the skill has target servant)
+
+            color: int, optional
+        The color of skill card(if need). 1~3 represent Green, Blue, Red
+        (If the skill has target color)
 
             extend: bool
         Extend skill time for 1 sec if needed. Default: false
@@ -100,6 +105,8 @@ class Automata():
         time.sleep(1)
         if tar != 0:
             self.select_servant(tar)
+        if color != 0:
+            self.select_color(color)
         if extend:
             time.sleep(1)
 
@@ -149,6 +156,23 @@ class Automata():
         while not util.standby(util.get_sh(self.shifts), crds.IMAGE["select"]):
             time.sleep(0.2)
         self.tap(crds.TARGETS[servant-1], 100, 100)
+
+    def select_color(self, color: int):
+        """ Select Skill Color
+
+        Parameters
+        ----------
+            color: int
+        The color of skill. 1~3 count for g/b/r
+        """
+        print("[DEBUG] Color waiting.", crds.IMAGE["color_pick"])
+        while not util.standby(util.get_sh(self.shifts), crds.IMAGE["color_pick"]):
+            time.sleep(0.2)
+        
+        ckp = crds.SKILL_COLOR_ID[color-1]
+        print("[DEBUG] Color selecting: ", ckp, crds.CARD_IMAGE[ckp])
+        coordinates = util.get_crd(util.get_sh(self.shifts), crds.CARD_IMAGE[ckp])
+        self.tap(coordinates[0], 100)
 
     def change_servant(self, org: int, tar: int):
         """ Change Servant
@@ -396,6 +420,11 @@ class Automata():
         time.sleep(0.2)
         x = util.get_crd(util.get_sh(self.shifts), crds.IMAGE["item"])
         self.tap(x[0])
+        if util.standby(util.get_sh(self.shifts), crds.IMAGE["apply_friend"]):
+            clo = util.get_crd(util.get_sh(self.shifts), crds.IMAGE["end"])
+            if len(clo) != 0:
+                self.tap(clo[0])
+            print("[INFO] NO apply friend.")
         if cont:
             time.sleep(0.5)
             self.tap((650, 850))    # tap `close` btn

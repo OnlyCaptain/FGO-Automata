@@ -81,16 +81,24 @@ IMAGE = map_dict(lambda x: IMAGE_BASE + x, {
     "item": "item.png",
     "close": "close.png",
     "decide": "decide.png",
-    "start": "start.png"
+    "start": "start.png",
+    "color_pick": "colorPick.png",
+    "apply_friend": "apply_friend.png",
+    "end": "end.png"
 })
 
 # JP version: "assets/jp/extra/"
 CARD_IMAGE_BASE = "assets/cn/extra/"
+
+SKILL_COLOR_ID = ["green","blue","red"]
 
 CARD_IMAGE = map_dict(lambda x: CARD_IMAGE_BASE + x, {
     "resist": "resist.png",
     "weak": "weak.png",
     "quick": "quick.png",
     "arts": "arts.png",
-    "buster": "buster.png"
+    "buster": "buster.png",
+    "green": "green.png",
+    "blue": "blue.png",
+    "red": "red.png"
 })
