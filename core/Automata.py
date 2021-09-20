@@ -420,11 +420,13 @@ class Automata():
         time.sleep(0.2)
         x = util.get_crd(util.get_sh(self.shifts), crds.IMAGE["item"])
         self.tap(x[0])
-        if util.standby(util.get_sh(self.shifts), crds.IMAGE["apply_friend"]):
+        time.sleep(0.5)
+        if util.standby(util.get_sh(self.shifts), crds.IMAGE["end"]):
             clo = util.get_crd(util.get_sh(self.shifts), crds.IMAGE["end"])
             if len(clo) != 0:
                 self.tap(clo[0])
             print("[INFO] NO apply friend.")
+        time.sleep(0.2)
         if cont:
             time.sleep(0.5)
             self.tap((650, 850))    # tap `close` btn
@@ -460,6 +462,10 @@ class Automata():
         y = util.get_crd(util.get_sh(self.shifts), crds.IMAGE["decide"])
         self.tap(y[0])
         print("[INFO] AP Recovered.")
+
+    def wait_attack(self):
+        while not util.standby(util.get_sh(self.shifts), crds.IMAGE["attack"]):
+            time.sleep(0.2)
 
     # others
     def start_battle(self):
