@@ -277,7 +277,7 @@ class Automata():
             self.tap(x[0])
 
     # advance support
-    def advance_support(self, spt: str = None, tms: int = 3):
+    def advance_support(self, spt: str = None, tms: int = 300):
         """ Advance Support Selection
 
         Parameters
@@ -286,7 +286,7 @@ class Automata():
         Override the initially set support.
 
             tms: int, optional
-        Max support list update times. (Default: 3)
+        Max support list update times. (Default: 300)
 
         Raises
         ------

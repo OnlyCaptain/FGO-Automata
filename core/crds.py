@@ -65,6 +65,7 @@ TARGETS = [
     (1440, 680)
 ]
 
+DRAW = (610, 650)
 # path to images
 # change the path if you're play FGO other than the CN version
 # JP version: "assets/jp/"
@@ -84,7 +85,11 @@ IMAGE = map_dict(lambda x: IMAGE_BASE + x, {
     "start": "start.png",
     "color_pick": "colorPick.png",
     "apply_friend": "apply_friend.png",
-    "end": "end.png"
+    "end": "end.png",
+    "switchbox": "switchbox.png",
+    "fullemail": "fullemail.png",
+    "execute": "execute.png",
+    "close2": "close2.png"
 })
 
 # JP version: "assets/jp/extra/"
