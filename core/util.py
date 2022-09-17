@@ -102,6 +102,7 @@ def get_crd(imges, tmp: str, threshold: float = 0.85) -> [(int, int)]:
     loc = np.where(res >= threshold)
     for pt in zip(*loc[::-1]):
         pos.append(pt)
+    # print("tmp: {}, pos: {}, loc: {} ".format(tmp, pos, loc))
     return pos
 
 

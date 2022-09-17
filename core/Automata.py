@@ -6,7 +6,7 @@ from core.Dynamica import Dynamica
 
 
 class Automata():
-    def __init__(self, ckp: str, spt: str, sft=(0, 0), apl: (int, str) = (0, "")):
+    def __init__(self, ckp: str, spt: str, spt2: str="", sft=(0, 0), apl: (int, str) = (0, "")):
         """
         Parameters
         ----------
@@ -34,6 +34,7 @@ class Automata():
         self.shifts = sft
         self.checkpoint = ckp
         self.support = spt
+        self.support_bak = spt2
         self.counts = apl[0]  # apple counts
         self.apple = apl[1]   # apple type
 
@@ -99,12 +100,16 @@ class Automata():
             select_servant_skill(1) # skill w/o target servants
             select_servant_skill(3, 2) # skill w/ target servants
         """
-        while not util.standby(util.get_sh(self.shifts), crds.IMAGE["attack"]):
-            time.sleep(0.2)
+        self.wait_attack()
+        # while not util.standby(util.get_sh(self.shifts), crds.IMAGE["attack"]):
+        #     time.sleep(0.2)
         self.tap(crds.SERVANT_SKILLS[skill-1], 5, 5)
         time.sleep(1)
         if tar != 0:
-            self.select_servant(tar)
+            rt = self.select_servant(tar)
+            while rt == -1:
+                self.tap(crds.SERVANT_SKILLS[skill-1], 5, 5)
+                rt = self.select_servant(tar)
         if color != 0:
             self.select_color(color)
         if extend:
@@ -153,9 +158,14 @@ class Automata():
             servant: int
         The id of the servant. 1~3 counted from left.
         """
-        while not util.standby(util.get_sh(self.shifts), crds.IMAGE["select"]):
+        times = 4
+        while times and not util.standby(util.get_sh(self.shifts), crds.IMAGE["select"]):
+            times -= 1
             time.sleep(0.2)
+        if times == 0:
+            return -1
         self.tap(crds.TARGETS[servant-1], 100, 100)
+        return 1
 
     def select_color(self, color: int):
         """ Select Skill Color
@@ -276,8 +286,16 @@ class Automata():
         else:
             self.tap(x[0])
 
+    def find_multi_support(self):
+        x = util.get_crd(util.get_sh(self.shifts), self.support)
+        if len(x) > 0:
+            return x
+        print("[DEBUG] find backup support")
+        x = util.get_crd(util.get_sh(self.shifts), self.support_bak)
+        return x
+
     # advance support
-    def advance_support(self, spt: str = None, tms: int = 3):
+    def advance_support(self, spt: str = None, tms: int = 8):
         """ Advance Support Selection
 
         Parameters
@@ -293,16 +311,20 @@ class Automata():
             Exception("Desired support not found!")
         Raises when reached maxium update times.
         """
-        time.sleep(0.3)
+        while not util.standby(util.get_sh(self.shifts), crds.IMAGE["support"]):
+            time.sleep(0.3)
         if spt is None:
             spt = self.support
-        x = util.get_crd(util.get_sh(self.shifts), spt)
+        # x = util.get_crd(util.get_sh(self.shifts), spt)
+        x = self.find_multi_support()
+        time.sleep(0.5)
         counter = False
         times = tms
         while len(x) == 0:
             if not counter:
-                self.swipe((1000, 800), (1000, 300), 0.5 +
+                self.swipe((1875, 800), (1875, 300), 0.5 +
                            0.1 * random.randrange(1, 10))
+                # print("swip 1875, 800 to 300")
                 counter = True
             else:
                 update = self.update_support()
@@ -314,7 +336,8 @@ class Automata():
                 else:
                     time.sleep(3)
             time.sleep(0.5)
-            x = util.get_crd(util.get_sh(self.shifts), spt)
+            # x = util.get_crd(util.get_sh(self.shifts), spt)
+            x = self.find_multi_support()
         self.tap(x[0])
         print("[INFO] Support selected.")
 
@@ -465,7 +488,8 @@ class Automata():
 
     def wait_attack(self):
         while not util.standby(util.get_sh(self.shifts), crds.IMAGE["attack"]):
-            time.sleep(0.2)
+            print("[DEBUG] wait attack...")
+            time.sleep(0.8)
 
     # others
     def start_battle(self):
@@ -487,8 +511,9 @@ class Automata():
 
         """
         self.select_checkpoint()
+        time.sleep(0.5)
         if advance:
-            self.advance_support()
+            self.advance_support(10)
         else:
             self.select_support()
         self.start_battle()

@@ -72,9 +72,11 @@ IMAGE_BASE = "assets/cn/"
 
 IMAGE = map_dict(lambda x: IMAGE_BASE + x, {
     "attack": "attack.png",
+    "attack2": "attack2.png",
     "select": "select.png",
     "order_change": "order_change.png",
     "no_ap": "noap.png",
+    "support": "support.png",
     "update_support": "update.png",
     "confirm_update": "uplist.png",
     "finish": "finish.png",
