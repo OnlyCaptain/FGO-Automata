@@ -304,7 +304,7 @@ class Automata():
         Override the initially set support.
 
             tms: int, optional
-        Max support list update times. (Default: 3)
+        Max support list update times. (Default: 300)
 
         Raises
         ------
