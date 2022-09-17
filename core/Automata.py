@@ -488,7 +488,7 @@ class Automata():
 
     def wait_attack(self):
         while not util.standby(util.get_sh(self.shifts), crds.IMAGE["attack"]):
-            print("[DEBUG] wait attack...")
+            # print("[DEBUG] wait attack...")
             time.sleep(0.8)
 
     # others
